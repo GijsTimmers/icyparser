@@ -18,7 +18,11 @@ class IcyParser():
         ## request the metadata headers: otherwise we won't get them.
         extra_headers = {"Icy-MetaData":1}
 
-        rq  = urllib.request.Request(url=self.url, headers=extra_headers)
+        try:
+            rq  = urllib.request.Request(url=self.url, headers=extra_headers)
+        except ValueError:
+            print("Faulty URL. Please check URL and run again.")
+            sys.exit(1)
         rsp = urllib.request.urlopen(rq)
 
         rsp_headers = rsp.getheaders()
@@ -47,7 +51,7 @@ class IcyParser():
 
 
         ## Some old code, this may come in handy if I decide to 
-        ## create a blocking interface later-on
+        ## create a blocking interface later on
         """
         while True:
 
@@ -69,7 +73,11 @@ class IcyParser():
 
 
 def entry_point():
-    url = sys.argv[1]
+    try:
+        url = sys.argv[1]
+    except IndexError:
+        print("Usage: icyparser URL")
+        sys.exit(1)
     ip = IcyParser(url)
     headers_dict = ip.getIcyInformation()
     

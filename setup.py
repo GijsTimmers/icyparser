@@ -17,7 +17,7 @@ try:
         name = "icyparser",
         packages = ["icyparser"],
         version = "1.0.0",
-        description = "A script to download the ICY information for a stream and store it as an object.",
+        description = "A script to download the ICY information for a stream and return it as a dict",
         author = "Gijs Timmers",
         author_email = "gijs.timmers@student.kuleuven.be",
         url = "https://github.com/GijsTimmers/icyparser",

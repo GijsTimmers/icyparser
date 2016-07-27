@@ -4,46 +4,74 @@
 ## Documentation on ICY in Icecast streams:
 ## http://www.smackfu.com/stuff/programming/shoutcast.html
 
+import os
+import re
 import sys
 import urllib.parse
 import urllib.request
 
+class IcyParser():
+    def __init__(self, url):
+        self.url = url
 
-def icyparser(url):
-    extra_headers = {"Icy-MetaData":1}
+    def getIcyInformation(self):
+        ## request the metadata headers: otherwise we won't get them.
+        extra_headers = {"Icy-MetaData":1}
 
-    rq  = urllib.request.Request(url=url, headers=extra_headers)
-    rsp = urllib.request.urlopen(rq)
+        rq  = urllib.request.Request(url=self.url, headers=extra_headers)
+        rsp = urllib.request.urlopen(rq)
 
-    rsp_headers = rsp.getheaders()
-    clean_dict = dict(rsp_headers)
+        rsp_headers = rsp.getheaders()
+        headers_dict = dict(rsp_headers)
 
-    for k in sorted(clean_dict.keys()):
-        print(k + ": " + clean_dict[k])
+        metaint = int(headers_dict["icy-metaint"])
+        
+        ## read the metaint amount of bytes so that our 'cursor'
+        ## is at the right offset
+        rsp.read(metaint)
 
-    #chunksize = 1024
-    chunksize = 16000
+        ## read the length specifier: this will tell us the length of
+        ## the StreamTitle string
+        length_specifier = int(ord(rsp.read(1)))*16
 
-    count = 0
-    lengte_metadata = 0
-    metadata = ""
-    
-    while True:
-        stream = rsp.read(1)
-        count += 1
+        ## finally, read the necessary amount of bytes and make it
+        ## human-readable
+        streamtitle = rsp.read(length_specifier).decode("utf-8", "ignore")
+        streamtitle = re.findall("(?<=StreamTitle=').*(?=';)", streamtitle)[0]
 
-        if count == 16001:
-            lengte_metadata = int(ord(stream))*16
-            print(lengte_metadata)
+        headers_dict["icy-streamtitle"] = streamtitle
 
-        if lengte_metadata != 0:
-            if count >= 16002 and count <= 16001 + lengte_metadata:
-                #print(stream)
-                print(stream.decode("utf-8", "ignore"), end="")
+        return(headers_dict)
 
-        if count >= 16500:
-            break
+
+
+
+        ## Some old code, this may come in handy if I decide to 
+        ## create a blocking interface later-on
+        """
+        while True:
+
+            rsp.read(16000)
+            b = rsp.read(1)
+            print(b)
+            length_specifier = int(ord(b))*16
+             
+            if length_specifier != 0:
+                print("l: {}".format(length_specifier))
+
+            msg = rsp.read(length_specifier)
+            if msg != b"":
+                print(msg)
+
+
+        print(rsp.read(20))
+        """
+
 
 def entry_point():
     url = sys.argv[1]
-    icyparser(url)
+    ip = IcyParser(url)
+    headers_dict = ip.getIcyInformation()
+    
+    for k in sorted(headers_dict.keys()):
+        print(k + ": " + headers_dict[k])

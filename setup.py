@@ -16,7 +16,7 @@ try:
     setup(
         name = "icyparser",
         packages = ["icyparser"],
-        version = "0.0.1",
+        version = "1.0.0",
         description = "A script to download the ICY information for a stream and store it as an object.",
         author = "Gijs Timmers",
         author_email = "gijs.timmers@student.kuleuven.be",

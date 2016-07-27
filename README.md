@@ -14,8 +14,9 @@ A script to retrieve an Icecast/Shoutcast's ICY stream and relevant metadata.
 
 - From another Python script:
     
-        from icyparser import icyparser
-        icyparser(url)
+        from icyparser import IcyParser
+        ip = IcyParser(url)
+        ip.getIcyInformation()  ## returns a dictionary object
 
 - Without installing:
 

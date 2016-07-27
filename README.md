@@ -4,7 +4,7 @@ A script to retrieve an Icecast/Shoutcast's ICY stream and relevant metadata.
 
 ### Installation
 
-    $ sudo python3 setup.py install
+    $ sudo pip3 install icyparser
 
 ### Usage
 

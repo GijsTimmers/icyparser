@@ -4,19 +4,19 @@ A script to retrieve an Icecast/Shoutcast's ICY stream and relevant metadata.
 
 ### Installation
 
-$ sudo python3 setup.py install
+    $ sudo python3 setup.py install
 
 ### Usage
 
 - From the terminal: 
 
-    $ icyparser URL
+        $ icyparser URL
 
 - From another Python script:
     
-    from icyparser import icyparser
-    icyparser(url)
+        from icyparser import icyparser
+        icyparser(url)
 
 - Without installing:
 
-    ./icyparser-runner.py URL
+        ./icyparser-runner.py URL

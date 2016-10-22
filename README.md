@@ -8,16 +8,14 @@ A script to retrieve an Icecast/Shoutcast's ICY stream and relevant metadata.
 
 ### Usage
 
-- From the terminal: 
-
-        $ icyparser URL
-
-- From another Python script:
+    >>> from icyparser import IcyParser
+    >>> ip = IcyParser()
+    >>> ip.getIcyInformation(url) ## starts thread, values become acccessible
+    >>> print(ip.icy_streamtitle)
+    Bonobo - Cirrus
+    >>> print(ip.icy_genre)
+    Alternative
+    >>> ip.stop()                 ## stops thread
     
-        from icyparser import IcyParser
-        ip = IcyParser(url)
-        ip.getIcyInformation()  ## returns a dictionary object
 
-- Without installing:
 
-        ./icyparser-runner.py URL

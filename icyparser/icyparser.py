@@ -29,7 +29,9 @@
 import os
 import re
 import sys
+import time
 import threading
+import tempfile
 import urllib.parse
 import urllib.request
 import http
@@ -142,8 +144,8 @@ class IcyParser(object):
             self.icy_br         = int(headers_dict["icy-br"])
             self.icy_metaint    = int(headers_dict["icy-metaint"])
             
-            self.icystream   = open("/tmp/icystream.txt", "w")
-            
+            self.icystream = tempfile.NamedTemporaryFile(mode="w+", delete=False)
+        
             ## Turn on to write all the non-ICY bytes to a playable MP3 file.
             #self.audiostream = open("audiostream.mp3", "w+b", buffering=0)
             
@@ -177,7 +179,8 @@ class IcyParser(object):
                     self.icy_streamtitle = \
                     re.findall("(?<=StreamTitle=').*(?=';)", streamtitle)[0]
                     #print(self.icy_streamtitle)
-                    self.icystream.write(self.icy_streamtitle + "\n")
+                    self.icystream.write("{} {}".format(time.strftime("%d-%m-%Y %H:%M:%S"), \
+                    self.icy_streamtitle + "\n"))
                     self.icystream.flush()
         
         except http.client.BadStatusLine as e:

@@ -169,7 +169,7 @@ class IcyParser(object):
                 ## Sometimes, no new StreamTitle is sent.
                 
                 try:
-                    length_specifier = int(ord(rsp.read(1)))*16
+                    length_specifier = ord(rsp.read(1))*16
                 except TypeError:
                     ## Will appear at times, I don't know why.
                     length_specifier = 0

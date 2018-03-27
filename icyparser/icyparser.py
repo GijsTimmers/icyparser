@@ -194,6 +194,14 @@ class IcyParser(object):
             ## this won't get messed up.
             print(e)
             pass
+
+        except urllib.error.URLError as e:
+            ## This exception pops up on faulty written URLs (typo?)
+            print("Kon de opgevraagde URL niet inladen.")
+            print("Controleer de URL:")
+            print("- moet starten met http://")
+            print("- geen typfouten?")
+            pass
     
     def stop(self):
         self.icystream.close()

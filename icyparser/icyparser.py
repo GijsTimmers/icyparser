@@ -52,6 +52,8 @@ class IcyParser(object):
         self.icy_pub         = ""
         self.icy_url         = ""
         self.icy_streamtitle = ""
+
+        self.filename        = ""
         
     def getIcyInformation(self, url):
         ## Use this function as entry point to icyInformation.
@@ -144,7 +146,9 @@ class IcyParser(object):
             self.icy_br         = int(headers_dict["icy-br"])
             self.icy_metaint    = int(headers_dict["icy-metaint"])
             
-            self.icystream = tempfile.NamedTemporaryFile(mode="w+", delete=False)
+            self.icystream = tempfile.NamedTemporaryFile(mode="w+",
+                    prefix="icyparser_")
+            self.filename  = self.icystream.name
         
             ## Turn on to write all the non-ICY bytes to a playable MP3 file.
             #self.audiostream = open("audiostream.mp3", "w+b", buffering=0)
@@ -192,6 +196,7 @@ class IcyParser(object):
             pass
     
     def stop(self):
+        self.icystream.close()
         self.thread_should_be_running = False
 
 ## Usage as a separate program is turned off for now.
